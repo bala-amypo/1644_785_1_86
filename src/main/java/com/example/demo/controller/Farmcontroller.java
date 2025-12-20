@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Farm;
-import com.example.demo.service.FarmService;
+import com.example.demo.service.Farmservice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FarmController {
 
-    private final FarmService farmService;
+    private final Farmservice farmService;
 
     @PostMapping
     public ResponseEntity<Farm> createFarm(@RequestBody Farm farm) {

@@ -12,7 +12,7 @@ public class FertilizerController {
 
     private final FertilizerService fertilizerService;
 
-    public FertilizerController(FertilizerService fertilizerService) {
+    public FertilizerController(Fertilizerservice fertilizerService) {
         this.fertilizerService = fertilizerService;
     }
 
