@@ -11,29 +11,29 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FarmServiceImpl implements FarmService {
+public class Farmserviceimpl implements Farmservice {
 
-    private final FarmRepository farmRepository;
+    private final Farmrepository service;
 
     @Override
-    public Farm createFarm(Farm farm) {
-        return farmRepository.save(farm);
+    public Farm createFarm(Farmentity farm) {
+        return service.save(farm);
     }
 
     @Override
     public Farm getFarmById(Long id) {
-        return farmRepository.findById(id)
+        return service.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Farm not found with id " + id));
     }
 
     @Override
     public List<Farm> getAllFarms() {
-        return farmRepository.findAll();
+        return service.findAll();
     }
 
     @Override
     public List<Farm> getFarmsByUserId(Long userId) {
-        return farmRepository.findByUserId(userId);
+        return service.findByUserId(userId);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FarmServiceImpl implements FarmService {
     @Override
     public void deleteFarm(Long id) {
         Farm farm = getFarmById(id);
-        farmRepository.delete(farm);
+        service.delete(farm);
     }
 }
 

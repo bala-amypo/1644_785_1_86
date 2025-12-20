@@ -1,19 +1,19 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Fertilizer;
+import com.example.demo.entity.Fertilizerentity;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.FertilizerRepository;
-import com.example.demo.service.FertilizerService;
+import com.example.demo.service.Fertilizerservice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class FertilizerServiceImpl implements FertilizerService {
+public class Fertilizerserviceimpl implements Fertilizerservice {
 
     private final FertilizerRepository fertilizerRepository;
 
-    public FertilizerServiceImpl(FertilizerRepository fertilizerRepository) {
+    public Fertilizerserviceimpl(Fertilizerrepository fertilizerRepository) {
         this.fertilizerRepository = fertilizerRepository;
     }
 
