@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Fertilizer {
+public class Fertilizerentity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
