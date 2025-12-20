@@ -13,23 +13,23 @@ public class Fertilizerserviceimpl implements Fertilizerservice {
 
     private final FertilizerRepository fertilizerRepository;
 
-    public Fertilizerserviceimpl(Fertilizerrepository fertilizerRepository) {
-        this.fertilizerRepository = fertilizerRepository;
+    public Fertilizerserviceimpl(Fertilizerrepository fertilizerrepository) {
+        this.fertilizerrepository = fertilizerrepository;
     }
 
     @Override
     public Fertilizer addFertilizer(Fertilizer fertilizer) {
-        return fertilizerRepository.save(fertilizer);
+        return service.save(fertilizer);
     }
 
     @Override
     public List<Fertilizer> getAllFertilizers() {
-        return fertilizerRepository.findAll();
+        return service.findAll();
     }
 
     @Override
     public Fertilizer getFertilizerById(Long id) {
-        return fertilizerRepository.findById(id)
+        return service.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Fertilizer not found with id " + id));
     }
 }
