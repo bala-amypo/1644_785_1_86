@@ -8,9 +8,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/fertilizers")
-public class FertilizerController {
+public class Fertilizercontroller {
 
-    private final FertilizerService fertilizerService;
+    private final Fertilizerservice fertilizerService;
 
     public FertilizerController(Fertilizerservice fertilizerService) {
         this.fertilizerService = fertilizerService;

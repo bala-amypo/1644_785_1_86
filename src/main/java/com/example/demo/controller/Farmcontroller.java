@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/farms")
 @RequiredArgsConstructor
-public class FarmController {
+public class Farmcontroller {
 
     private final Farmservice farmService;
 
