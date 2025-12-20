@@ -1,9 +1,9 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.Suggestion;
+import com.example.demo.entity.Suggestionentity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SuggestionRepository extends JpaRepository<Suggestion, Long> {
+public interface Suggestionrepository extends JpaRepository<Suggestion, Long> {
 }

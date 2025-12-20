@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Crop;
+import com.example.demo.entity.Cropentity;
 
 import java.util.List;
 
