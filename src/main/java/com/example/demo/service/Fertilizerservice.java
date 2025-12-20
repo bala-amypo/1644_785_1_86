@@ -1,14 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Fertilizer;
+import com.example.demo.entity.Fertilizerentity;
 
 import java.util.List;
 
-public interface FertilizerService {
+public interface Fertilizerservice {
 
-    Fertilizer addFertilizer(Fertilizer fertilizer);
+    Fertilizerentity addFertilizer(Fertilizerentity fertilizer);
 
     List<Fertilizer> getAllFertilizers();
 
-    Fertilizer getFertilizerById(Long id);
+    Fertilizerentity getFertilizerById(Long id);
 }

@@ -4,13 +4,13 @@ import com.example.demo.entity.Cropentity;
 
 import java.util.List;
 
-public interface CropService {
+public interface Cropservice {
 
-    Crop saveCrop(Crop crop);
+    Cropentity saveCrop(Cropentity crop);
 
     List<Crop> getAllCrops();
 
-    Crop getCropById(Long id);
+    Cropentity getCropById(Long id);
 
     void deleteCrop(Long id);
 }
