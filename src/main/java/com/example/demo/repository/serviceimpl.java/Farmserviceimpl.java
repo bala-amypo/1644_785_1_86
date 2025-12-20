@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Farm;
+import com.example.demo.entity.Farmentity;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.FarmRepository;
-import com.example.demo.service.FarmService;
+import com.example.demo.repository.Farmrepository;
+import com.example.demo.service.Farmservice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

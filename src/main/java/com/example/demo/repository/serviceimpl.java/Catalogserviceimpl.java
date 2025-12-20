@@ -34,6 +34,6 @@ public class Cropserviceimpl implements Cropservice {
     @Override
     public void deleteCrop(Long id) {
         Crop crop = getCropById(id);
-        cropRepository.delete(crop);
+        service.delete(crop);
     }
 }
