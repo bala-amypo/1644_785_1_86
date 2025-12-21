@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Farm;
-import com.example.demo.service.Farmservice;
+import com.example.demo.service.FarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/farms")
 @RequiredArgsConstructor
-public class Farmcontroller {
+public class FarmController {
 
-    private final Farmservice farmService;
+    private final FarmService farmService;
 
     @PostMapping
     public ResponseEntity<Farm> createFarm(@RequestBody Farm farm) {
