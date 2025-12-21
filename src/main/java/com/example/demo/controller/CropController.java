@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/crops")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "https://9057.408procr.amypo.ai/") 
 public class CropController {
 
     private final CropService cropService;

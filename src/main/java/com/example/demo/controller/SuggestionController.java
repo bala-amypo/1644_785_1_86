@@ -10,6 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/suggestions")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "https://9057.408procr.amypo.ai/") 
 public class SuggestionController {
 
     private final SuggestionService suggestionService;
