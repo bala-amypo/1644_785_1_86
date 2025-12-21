@@ -1,13 +1,14 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -16,15 +17,10 @@ public class User {
 
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
 
-    @Builder.Default
-    private String role = "USER";
-
-   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-   private List<Farm> farms;
-
+    private String role;
 }
