@@ -16,7 +16,7 @@ public class Fertilizer {
     private Long id;
 
     private String name;
-    private String type;        // Organic / Inorganic
-    private String nutrient;    // Nitrogen, Phosphorus, etc.
+    private String type;        
+    private String nutrient;    
     private String description;
 }
