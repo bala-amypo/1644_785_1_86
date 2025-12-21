@@ -1,14 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Suggestionentity;
+import com.example.demo.entity.Suggestion;
 
 import java.util.List;
 
-public interface Suggestionservice {
+public interface SuggestionService {
 
-    Suggestionentity saveSuggestion(Suggestionentity suggestion);
+    Suggestion saveSuggestion(Suggestion suggestion);
 
     List<Suggestion> getAllSuggestions();
 
-    Suggestionentity getSuggestionById(Long id);
+    Suggestion getSuggestionById(Long id);
 }

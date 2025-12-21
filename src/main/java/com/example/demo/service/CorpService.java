@@ -1,16 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Cropentity;
+import com.example.demo.entity.Crop;
 
 import java.util.List;
 
-public interface Cropservice {
+public interface CropService {
 
-    Cropentity saveCrop(Cropentity crop);
+    Crop saveCrop(Crop crop);
 
     List<Crop> getAllCrops();
 
-    Cropentity getCropById(Long id);
+    Crop getCropById(Long id);
 
     void deleteCrop(Long id);
 }
