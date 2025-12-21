@@ -1,6 +1,4 @@
 package com.example.demo.entity;
-
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -9,8 +7,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
-public class Userentity {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +16,15 @@ public class Userentity {
 
     private String name;
 
-    
+    @Column(unique = true)
     private String email;
 
     private String password;
 
     @Builder.Default
     private String role = "USER";
-    }
+
+   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+   private List<Farm> farms;
+
+}

@@ -2,9 +2,9 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
-
 @Entity
-public class Farmentity {
+@Table(name = "farms")
+public class Farm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,9 @@ public class Farmentity {
 
     private String season;
 
-    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     
 
