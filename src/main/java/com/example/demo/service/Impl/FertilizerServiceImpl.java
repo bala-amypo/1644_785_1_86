@@ -1,35 +1,35 @@
-package com.example.demo.service.Impl;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.Fertilizerentity;
+import com.example.demo.entity.Fertilizer;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.FertilizerRepository;
-import com.example.demo.service.Fertilizerservice;
+import com.example.demo.service.FertilizerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class Fertilizerserviceimpl implements Fertilizerservice {
+public class FertilizerServiceImpl implements FertilizerService {
 
     private final FertilizerRepository fertilizerRepository;
 
-    public Fertilizerserviceimpl(Fertilizerrepository fertilizerrepository) {
-        this.fertilizerrepository = fertilizerrepository;
+    public FertilizerServiceImpl(FertilizerRepository fertilizerRepository) {
+        this.fertilizerRepository = fertilizerRepository;
     }
 
     @Override
     public Fertilizer addFertilizer(Fertilizer fertilizer) {
-        return service.save(fertilizer);
+        return fertilizerRepository.save(fertilizer);
     }
 
     @Override
     public List<Fertilizer> getAllFertilizers() {
-        return service.findAll();
+        return fertilizerRepository.findAll();
     }
 
     @Override
     public Fertilizer getFertilizerById(Long id) {
-        return service.findById(id)
+        return fertilizerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Fertilizer not found with id " + id));
     }
 }

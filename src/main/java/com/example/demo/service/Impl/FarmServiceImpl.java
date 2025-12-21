@@ -1,9 +1,9 @@
-package com.example.demo.service.Impl;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.Farmentity;
+import com.example.demo.entity.Farm;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.Farmrepository;
-import com.example.demo.service.Farmservice;
+import com.example.demo.repository.FarmRepository;
+import com.example.demo.service.FarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,29 +11,29 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class Farmserviceimpl implements Farmservice {
+public class FarmServiceImpl implements FarmService {
 
-    private final Farmrepository service;
+    private final FarmRepository farmRepository;
 
     @Override
-    public Farm createFarm(Farmentity farm) {
-        return service.save(farm);
+    public Farm createFarm(Farm farm) {
+        return farmRepository.save(farm);
     }
 
     @Override
     public Farm getFarmById(Long id) {
-        return service.findById(id)
+        return farmRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Farm not found with id " + id));
     }
 
     @Override
     public List<Farm> getAllFarms() {
-        return service.findAll();
+        return farmRepository.findAll();
     }
 
     @Override
     public List<Farm> getFarmsByUserId(Long userId) {
-        return service.findByUserId(userId);
+        return farmRepository.findByUserId(userId);
     }
 
     @Override
@@ -52,7 +52,6 @@ public class Farmserviceimpl implements Farmservice {
     @Override
     public void deleteFarm(Long id) {
         Farm farm = getFarmById(id);
-        service.delete(farm);
+        farmRepository.delete(farm);
     }
 }
-

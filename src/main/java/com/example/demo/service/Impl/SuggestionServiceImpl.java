@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Suggestionentity;
+import com.example.demo.entity.Suggestion;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.Suggestionrepository;
-import com.example.demo.service.Suggestionservice;
+import com.example.demo.repository.SuggestionRepository;
+import com.example.demo.service.SuggestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,23 +11,23 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class Suggestionserviceimpl implements Suggestionservice {
+public class SuggestionServiceImpl implements SuggestionService {
 
-    private final Suggestionrepository suggestionrepository;
+    private final SuggestionRepository suggestionRepository;
 
     @Override
     public Suggestion saveSuggestion(Suggestion suggestion) {
-        return service.save(suggestion);
+        return suggestionRepository.save(suggestion);
     }
 
     @Override
     public List<Suggestion> getAllSuggestions() {
-        return service.findAll();
+        return suggestionRepository.findAll();
     }
 
     @Override
     public Suggestion getSuggestionById(Long id) {
-        return service.findById(id)
+        return suggestionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Suggestion not found with id " + id));
     }
 }

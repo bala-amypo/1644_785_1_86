@@ -1,9 +1,9 @@
-package com.example.demo.service.Impl;
+package com.example.demo.service.impl;
 
-import com.example.demo.entity.Cropentity;
+import com.example.demo.entity.Crop;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.Croprepository;
-import com.example.demo.service.Cropservice;
+import com.example.demo.repository.CropRepository;
+import com.example.demo.service.CropService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,29 +11,29 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class Cropserviceimpl implements Cropservice {
+public class CropServiceImpl implements CropService {
 
-    private final Croprepository service;
+    private final CropRepository cropRepository;
 
     @Override
-    public Crop saveCrop(Cropentity crop) {
-        return service.save(crop);
+    public Crop saveCrop(Crop crop) {
+        return cropRepository.save(crop);
     }
 
     @Override
     public List<Crop> getAllCrops() {
-        return service.findAll();
+        return cropRepository.findAll();
     }
 
     @Override
     public Crop getCropById(Long id) {
-        return service.findById(id)
+        return cropRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Crop not found with id " + id));
     }
 
     @Override
     public void deleteCrop(Long id) {
         Crop crop = getCropById(id);
-        service.delete(crop);
+        cropRepository.delete(crop);
     }
 }
