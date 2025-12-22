@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/farms")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "") 
+@CrossOrigin(origins = "https://9057.408procr.amypo.ai/") 
 public class FarmController {
 
     private final FarmService farmService;
