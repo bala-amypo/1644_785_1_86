@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://9004.408procr.amypo.ai/") 
+@CrossOrigin(origins = "https://9169.pro604cr.amypo.ai/") 
 
 public class UserController {
 

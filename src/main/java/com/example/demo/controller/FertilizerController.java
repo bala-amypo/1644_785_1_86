@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/fertilizers")
-@CrossOrigin(origins = "https://9004.408procr.amypo.ai/") 
+@CrossOrigin(origins = "https://9169.pro604cr.amypo.ai/") 
 public class FertilizerController {
 
     private final FertilizerService fertilizerService;
