@@ -1,4 +1,5 @@
 import os
+import shutil
 
 BASE = "src/main/java/com/example/demo"
 
@@ -6,110 +7,141 @@ def write(path, content):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         f.write(content)
-    print(f"✔ Created {path}")
+    print(f"✔ Fixed {path}")
 
-# =========================
-# CONTROLLERS
-# =========================
+# =====================================================
+# 1. REMOVE DUPLICATE Impl DIRECTORY
+# =====================================================
+bad_impl = f"{BASE}/service/Impl"
+if os.path.exists(bad_impl):
+    shutil.rmtree(bad_impl)
+    print("✔ Removed duplicate service/Impl directory")
 
-write(f"{BASE}/controller/AuthController.java", """
-package com.example.demo.controller;
+# =====================================================
+# 2. FIX DTOs
+# =====================================================
+write(f"{BASE}/dto/FarmRequest.java", """
+package com.example.demo.dto;
 
-import com.example.demo.service.UserService;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Getter;
+import lombok.Setter;
 
-@RestController
-public class AuthController {
-
-    private final UserService userService;
-
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
+@Getter
+@Setter
+public class FarmRequest {
+    private String name;
 }
 """)
 
-write(f"{BASE}/controller/CatalogController.java", """
-package com.example.demo.controller;
+# =====================================================
+# 3. FIX ENTITIES (Lombok)
+# =====================================================
+write(f"{BASE}/entity/User.java", """
+package com.example.demo.entity;
 
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@RestController
-public class CatalogController {
+@Entity
+@Getter
+@Setter
+public class User {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String name;
+    private String email;
+    private String password;
+    private String role;
 }
 """)
 
-write(f"{BASE}/controller/SuggestionController.java", """
-package com.example.demo.controller;
+write(f"{BASE}/entity/Farm.java", """
+package com.example.demo.entity;
 
-import com.example.demo.service.SuggestionService;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@RestController
-public class SuggestionController {
+@Entity
+@Getter
+@Setter
+public class Farm {
 
-    private final SuggestionService suggestionService;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    public SuggestionController(SuggestionService suggestionService) {
-        this.suggestionService = suggestionService;
-    }
-
-    public String generate(long farmId) {
-        return suggestionService.generateSuggestion(farmId);
-    }
-
-    public String getSuggestion(long farmId) {
-        return suggestionService.getSuggestion(farmId);
-    }
+    private String farmName;
+    private String location;
+    private String season;
+    private Long ownerId;
 }
 """)
 
-write(f"{BASE}/controller/FarmController.java", """
-package com.example.demo.controller;
+write(f"{BASE}/entity/Crop.java", """
+package com.example.demo.entity;
 
-import com.example.demo.dto.FarmRequest;
-import com.example.demo.entity.Farm;
-import com.example.demo.service.FarmService;
-import com.example.demo.service.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@RestController
-public class FarmController {
+@Entity
+@Getter
+@Setter
+public class Crop {
 
-    private final FarmService farmService;
-    private final UserService userService;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    public FarmController(FarmService farmService, UserService userService) {
-        this.farmService = farmService;
-        this.userService = userService;
-    }
-
-    public Farm createFarm(FarmRequest req, Authentication auth) {
-        Farm farm = new Farm();
-        farm.setName(req.getName());
-        return farmService.createFarm(farm, 1L);
-    }
-
-    public Object listFarms(Authentication auth) {
-        return farmService.getFarmsByOwner(1L);
-    }
+    private String season;
+    private double suitablePHMin;
+    private double suitablePHMax;
 }
 """)
 
-# =========================
-# SERVICES
-# =========================
+write(f"{BASE}/entity/Fertilizer.java", """
+package com.example.demo.entity;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+public class Fertilizer {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String npkRatio;
+}
+""")
+
+# =====================================================
+# 4. FIX SERVICE INTERFACES
+# =====================================================
 write(f"{BASE}/service/UserService.java", """
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
+import java.util.List;
 
 public interface UserService {
 
-    User register(User user);
+    User create(User user);
+    User getById(Long id);
+    List<User> getAll();
+    User update(Long id, User user);
+    void delete(Long id);
 
+    User register(User user);
     User findByEmail(String email);
 }
 """)
@@ -123,7 +155,6 @@ import java.util.List;
 public interface FarmService {
 
     Farm createFarm(Farm farm, long ownerId);
-
     List<Farm> getFarmsByOwner(long ownerId);
 }
 """)
@@ -134,15 +165,13 @@ package com.example.demo.service;
 public interface SuggestionService {
 
     String generateSuggestion(long farmId);
-
     String getSuggestion(long farmId);
 }
 """)
 
-# =========================
-# SERVICE IMPLEMENTATIONS
-# =========================
-
+# =====================================================
+# 5. FIX SERVICE IMPLEMENTATIONS
+# =====================================================
 write(f"{BASE}/service/impl/UserServiceImpl.java", """
 package com.example.demo.service.impl;
 
@@ -150,22 +179,25 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
+import java.util.List;
+
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repo;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public User register(User user) {
-        return userRepository.save(user);
-    }
+    public User create(User user) { return repo.save(user); }
+    public User getById(Long id) { return repo.findById(id).orElse(null); }
+    public List<User> getAll() { return repo.findAll(); }
+    public User update(Long id, User user) { return repo.save(user); }
+    public void delete(Long id) { repo.deleteById(id); }
 
-    @Override
+    public User register(User user) { return repo.save(user); }
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        return repo.findByEmail(email).orElse(null);
     }
 }
 """)
@@ -181,21 +213,19 @@ import java.util.List;
 
 public class FarmServiceImpl implements FarmService {
 
-    private final FarmRepository farmRepository;
+    private final FarmRepository repo;
 
-    public FarmServiceImpl(FarmRepository farmRepository) {
-        this.farmRepository = farmRepository;
+    public FarmServiceImpl(FarmRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
     public Farm createFarm(Farm farm, long ownerId) {
         farm.setOwnerId(ownerId);
-        return farmRepository.save(farm);
+        return repo.save(farm);
     }
 
-    @Override
     public List<Farm> getFarmsByOwner(long ownerId) {
-        return farmRepository.findByOwnerId(ownerId);
+        return repo.findByOwnerId(ownerId);
     }
 }
 """)
@@ -207,42 +237,14 @@ import com.example.demo.service.SuggestionService;
 
 public class SuggestionServiceImpl implements SuggestionService {
 
-    @Override
     public String generateSuggestion(long farmId) {
         return "Generated suggestion for farm " + farmId;
     }
 
-    @Override
     public String getSuggestion(long farmId) {
         return "Suggestion for farm " + farmId;
     }
 }
 """)
 
-# =========================
-# REPOSITORIES
-# =========================
-
-write(f"{BASE}/repository/UserRepository.java", """
-package com.example.demo.repository;
-
-import com.example.demo.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
-
-public interface UserRepository extends JpaRepository<User, Long> {
-
-    Optional<User> findByEmail(String email);
-
-    boolean existsByEmail(String email);
-}
-""")
-
-# =========================
-# SWAGGER CONFIG
-# =========================
-
-
-
-print("\\n✅ ALL FIXES APPLIED SUCCESSFULLY")
+print("\\n✅ FINAL CLEANUP & FIX COMPLETE")

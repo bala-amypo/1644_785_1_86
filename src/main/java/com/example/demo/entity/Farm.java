@@ -2,27 +2,20 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class Farm {
-    @Id @GeneratedValue
-    private Long id;
-    private String name;
-    private String farmName;
-    private double soilPH;
-    private double soilPh;
-    private double waterLevel;
-    private String season;
-    private String Location;
-    public double getSoilPh(){return this.soilPh;}
-    public void setSoilPh(double ph){this.soilPh=ph;}
 
-    @ManyToOne
-    private User user;
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private String farmName;
+    private String location;
+    private String season;
+    private Long ownerId;
 }

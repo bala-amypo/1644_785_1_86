@@ -2,20 +2,19 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class Crop {
-    @Id @GeneratedValue
+
+    @Id
+    @GeneratedValue
     private Long id;
-    private String name;
+
+    private String season;
     private double suitablePHMin;
     private double suitablePHMax;
-    private double requiredWater;
-    private String season;
 }

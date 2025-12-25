@@ -9,20 +9,18 @@ import java.util.List;
 
 public class FarmServiceImpl implements FarmService {
 
-    private final FarmRepository farmRepository;
+    private final FarmRepository repo;
 
-    public FarmServiceImpl(FarmRepository farmRepository) {
-        this.farmRepository = farmRepository;
+    public FarmServiceImpl(FarmRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
     public Farm createFarm(Farm farm, long ownerId) {
         farm.setOwnerId(ownerId);
-        return farmRepository.save(farm);
+        return repo.save(farm);
     }
 
-    @Override
     public List<Farm> getFarmsByOwner(long ownerId) {
-        return farmRepository.findByOwnerId(ownerId);
+        return repo.findByOwnerId(ownerId);
     }
 }

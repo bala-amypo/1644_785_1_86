@@ -1,1 +1,11 @@
-package com.example.demo.dto; public record FarmRequest(String name,double soilPH,double waterLevel,String season){}
+
+package com.example.demo.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class FarmRequest {
+    private String name;
+}
