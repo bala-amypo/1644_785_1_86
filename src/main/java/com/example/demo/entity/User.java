@@ -1,21 +1,19 @@
 
 package com.example.demo.entity;
 
+import lombok.*;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.*;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue
     private Long id;
-
-    private String name;
     private String email;
     private String password;
-    private String role;
 }

@@ -1,18 +1,19 @@
 
 package com.example.demo.entity;
 
+import lombok.*;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.*;
 
 @Entity
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Fertilizer {
-
     @Id
     @GeneratedValue
     private Long id;
-
-    private String npkRatio;
+    private String name;
+    private String recommendedForCrops;
 }

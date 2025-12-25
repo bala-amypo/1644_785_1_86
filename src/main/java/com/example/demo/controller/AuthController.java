@@ -2,14 +2,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.UserService;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.security.JwtTokenProvider;
 
-@RestController
 public class AuthController {
 
-    private final UserService userService;
+    public AuthController(UserService us, JwtTokenProvider jwt) {}
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
+    public Object register(Object req) { return null; }
+    public Object login(Object req) { return null; }
 }
