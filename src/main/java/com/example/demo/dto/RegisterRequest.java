@@ -1,1 +1,1 @@
-package com.example.demo.dto; public record RegisterRequest(String name,String email,String password){}
+package com.example.demo.dto; public class RegisterRequest(String name,String email,String password){}

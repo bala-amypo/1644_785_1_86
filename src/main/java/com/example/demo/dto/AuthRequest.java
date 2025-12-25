@@ -1,1 +1,1 @@
-package com.example.demo.dto; public record AuthRequest(String email,String password){}
+package com.example.demo.dto; public class AuthRequest(String email,String password){}

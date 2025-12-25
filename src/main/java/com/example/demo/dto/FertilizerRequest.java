@@ -1,1 +1,1 @@
-package com.example.demo.dto; public record FertilizerRequest(String name,String npkRatio,String recommendedForCrops){}
+package com.example.demo.dto; public class FertilizerRequest(String name,String npkRatio,String recommendedForCrops){}
