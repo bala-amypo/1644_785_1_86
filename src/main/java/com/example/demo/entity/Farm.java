@@ -12,10 +12,11 @@ public class Farm {
     @Id @GeneratedValue
     private Long id;
     private String name;
-    private double soilPH;
+    private double soilPh;
     private double waterLevel;
     private String season;
+    private String location;
 
     @ManyToOne
-    private User owner;
+    private User user;
 }
