@@ -1,20 +1,24 @@
 package com.example.demo.entity;
 
-import lombok.*;
 import jakarta.persistence.*;
-import java.util.*;
+import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
 public class Suggestion {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String text;
-}    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getText() { return text; }
-    public void setText(String text) { this.text = text; }
+
+    @ManyToOne
+    private Farm farm;
+
+    private String suggestedCrops;      // CSV
+    private String suggestedFertilizers; // CSV
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if(createdAt == null) createdAt = LocalDateTime.now();
+    }
+}
