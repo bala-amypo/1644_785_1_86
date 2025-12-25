@@ -16,6 +16,7 @@ public class Farm {
     private double waterLevel;
     private String season;
     private String location;
+    private String farmName;
 
     @ManyToOne
     private User user;
