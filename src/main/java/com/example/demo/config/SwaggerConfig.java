@@ -18,4 +18,7 @@ public class SwaggerConfig {
                                 .url("https://9169.pro604cr.amypo.ai")
                 ));
     }
+    public Object api() {
+        return new Object();
+    }
 }

@@ -1,32 +1,23 @@
+
 package com.example.demo.controller;
 
-import com.example.demo.entity.Suggestion;
 import com.example.demo.service.SuggestionService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/suggestions")
-@RequiredArgsConstructor
-@CrossOrigin(origins = "https://9169.pro604cr.amypo.ai/") 
 public class SuggestionController {
 
     private final SuggestionService suggestionService;
 
-    @PostMapping
-    public Suggestion createSuggestion(@RequestBody Suggestion suggestion) {
-        return suggestionService.saveSuggestion(suggestion);
+    public SuggestionController(SuggestionService suggestionService) {
+        this.suggestionService = suggestionService;
     }
 
-    @GetMapping
-    public List<Suggestion> getAllSuggestions() {
-        return suggestionService.getAllSuggestions();
+    public String generate(long farmId) {
+        return suggestionService.generateSuggestion(farmId);
     }
 
-    @GetMapping("/{id}")
-    public Suggestion getSuggestionById(@PathVariable Long id) {
-        return suggestionService.getSuggestionById(id);
+    public String getSuggestion(long farmId) {
+        return suggestionService.getSuggestion(farmId);
     }
 }

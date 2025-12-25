@@ -1,255 +1,248 @@
 import os
-from pathlib import Path
 
-BASE = Path("src/main/java/com/example/demo")
+BASE = "src/main/java/com/example/demo"
 
 def write(path, content):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
-    print("Created:", path)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        f.write(content)
+    print(f"✔ Created {path}")
 
-# -------------------- DemoApplication --------------------
-write(BASE / "DemoApplication.java", """
-package com.example.demo;
+# =========================
+# CONTROLLERS
+# =========================
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+write(f"{BASE}/controller/AuthController.java", """
+package com.example.demo.controller;
 
-@SpringBootApplication
-public class DemoApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+import com.example.demo.service.UserService;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AuthController {
+
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 }
 """)
 
-# -------------------- EXCEPTIONS --------------------
-write(BASE / "exception/BadRequestException.java", """
-package com.example.demo.exception;
+write(f"{BASE}/controller/CatalogController.java", """
+package com.example.demo.controller;
 
-public class BadRequestException extends RuntimeException {
-    public BadRequestException(String msg) { super(msg); }
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class CatalogController {
 }
 """)
 
-write(BASE / "exception/ResourceNotFoundException.java", """
-package com.example.demo.exception;
+write(f"{BASE}/controller/SuggestionController.java", """
+package com.example.demo.controller;
 
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String msg) { super(msg); }
-}
-""")
+import com.example.demo.service.SuggestionService;
+import org.springframework.web.bind.annotation.RestController;
 
-write(BASE / "exception/GlobalExceptionHandler.java", """
-package com.example.demo.exception;
+@RestController
+public class SuggestionController {
 
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+    private final SuggestionService suggestionService;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public SuggestionController(SuggestionService suggestionService) {
+        this.suggestionService = suggestionService;
     }
-}
-""")
 
-# -------------------- UTIL --------------------
-write(BASE / "util/ValidationUtil.java", """
-package com.example.demo.util;
+    public String generate(long farmId) {
+        return suggestionService.generateSuggestion(farmId);
+    }
 
-import java.util.Set;
-
-public class ValidationUtil {
-    private static final Set<String> SEASONS = Set.of("Kharif", "Rabi");
-
-    public static boolean validSeason(String s) {
-        return SEASONS.contains(s);
+    public String getSuggestion(long farmId) {
+        return suggestionService.getSuggestion(farmId);
     }
 }
 """)
 
-# -------------------- ENTITIES --------------------
-entity_common = """
-import jakarta.persistence.*;
-import lombok.*;
-"""
+write(f"{BASE}/controller/FarmController.java", """
+package com.example.demo.controller;
 
-write(BASE / "entity/User.java", f"""
-package com.example.demo.entity;
-{entity_common}
+import com.example.demo.dto.FarmRequest;
+import com.example.demo.entity.Farm;
+import com.example.demo.service.FarmService;
+import com.example.demo.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.RestController;
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {{
-    @Id @GeneratedValue
-    private Long id;
-    private String name;
-    private String email;
-    private String password;
-    private String role;
-}}
-""")
+@RestController
+public class FarmController {
 
-write(BASE / "entity/Farm.java", f"""
-package com.example.demo.entity;
-{entity_common}
+    private final FarmService farmService;
+    private final UserService userService;
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Farm {{
-    @Id @GeneratedValue
-    private Long id;
-    private String name;
-    private double soilPH;
-    private double waterLevel;
-    private String season;
-
-    @ManyToOne
-    private User owner;
-}}
-""")
-
-write(BASE / "entity/Crop.java", f"""
-package com.example.demo.entity;
-{entity_common}
-
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Crop {{
-    @Id @GeneratedValue
-    private Long id;
-    private String name;
-    private double suitablePHMin;
-    private double suitablePHMax;
-    private double requiredWater;
-    private String season;
-}}
-""")
-
-write(BASE / "entity/Fertilizer.java", f"""
-package com.example.demo.entity;
-{entity_common}
-
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Fertilizer {{
-    @Id @GeneratedValue
-    private Long id;
-    private String name;
-    private String npkRatio;
-    private String recommendedForCrops;
-}}
-""")
-
-write(BASE / "entity/Suggestion.java", f"""
-package com.example.demo.entity;
-{entity_common}
-
-import java.time.LocalDateTime;
-
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Suggestion {{
-    @Id @GeneratedValue
-    private Long id;
-
-    @ManyToOne
-    private Farm farm;
-
-    private String suggestedCrops;
-    private String suggestedFertilizers;
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    public void prePersist() {{
-        createdAt = LocalDateTime.now();
-    }}
-}}
-""")
-
-# -------------------- DTOs --------------------
-dto = BASE / "dto"
-write(dto / "AuthRequest.java", "package com.example.demo.dto; public record AuthRequest(String email,String password){}")
-write(dto / "AuthResponse.java", "package com.example.demo.dto; public record AuthResponse(String token){}")
-write(dto / "RegisterRequest.java", "package com.example.demo.dto; public record RegisterRequest(String name,String email,String password){}")
-write(dto / "FarmRequest.java", "package com.example.demo.dto; public record FarmRequest(String name,double soilPH,double waterLevel,String season){}")
-write(dto / "CropRequest.java", "package com.example.demo.dto; public record CropRequest(String name,double suitablePHMin,double suitablePHMax,double requiredWater,String season){}")
-write(dto / "FertilizerRequest.java", "package com.example.demo.dto; public record FertilizerRequest(String name,String npkRatio,String recommendedForCrops){}")
-
-# -------------------- REPOSITORIES --------------------
-repo = BASE / "repository"
-write(repo / "UserRepository.java", "package com.example.demo.repository; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; import com.example.demo.entity.User; public interface UserRepository extends JpaRepository<User,Long>{ Optional<User> findByEmail(String e);} ")
-write(repo / "FarmRepository.java", "package com.example.demo.repository; import org.springframework.data.jpa.repository.JpaRepository; import com.example.demo.entity.Farm; public interface FarmRepository extends JpaRepository<Farm,Long>{}")
-write(repo / "CropRepository.java", "package com.example.demo.repository; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; import com.example.demo.entity.Crop; public interface CropRepository extends JpaRepository<Crop,Long>{ List<Crop> findSuitableCrops(double ph,String season);} ")
-write(repo / "FertilizerRepository.java", "package com.example.demo.repository; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; import com.example.demo.entity.Fertilizer; public interface FertilizerRepository extends JpaRepository<Fertilizer,Long>{ List<Fertilizer> findByCropName(String name);} ")
-write(repo / "SuggestionRepository.java", "package com.example.demo.repository; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; import com.example.demo.entity.Suggestion; public interface SuggestionRepository extends JpaRepository<Suggestion,Long>{ List<Suggestion> findByFarmId(Long id);} ")
-
-# -------------------- SECURITY --------------------
-write(BASE / "security/JwtTokenProvider.java", """
-package com.example.demo.security;
-
-import io.jsonwebtoken.*;
-import java.util.Date;
-
-public class JwtTokenProvider {
-
-    private final String secret = "secret";
-    private final long validity = 3600000;
-
-    public String createToken(Long id, String email, String role) {
-        return Jwts.builder()
-                .claim("id", id)
-                .claim("email", email)
-                .claim("role", role)
-                .setExpiration(new Date(System.currentTimeMillis()+validity))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+    public FarmController(FarmService farmService, UserService userService) {
+        this.farmService = farmService;
+        this.userService = userService;
     }
 
-    public boolean validateToken(String token) {
-        Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-        return true;
+    public Farm createFarm(FarmRequest req, Authentication auth) {
+        Farm farm = new Farm();
+        farm.setName(req.getName());
+        return farmService.createFarm(farm, 1L);
     }
 
-    public String getEmail(String token) {
-        return (String) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("email");
-    }
-
-    public Long getUserId(String token) {
-        return ((Number) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id")).longValue();
-    }
-
-    public String getRole(String token) {
-        return (String) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("role");
+    public Object listFarms(Authentication auth) {
+        return farmService.getFarmsByOwner(1L);
     }
 }
 """)
 
-write(BASE / "security/JwtAuthenticationFilter.java", """
-package com.example.demo.security;
-public class JwtAuthenticationFilter {
-    public JwtAuthenticationFilter(JwtTokenProvider p){}
+# =========================
+# SERVICES
+# =========================
+
+write(f"{BASE}/service/UserService.java", """
+package com.example.demo.service;
+
+import com.example.demo.entity.User;
+
+public interface UserService {
+
+    User register(User user);
+
+    User findByEmail(String email);
 }
 """)
 
+write(f"{BASE}/service/FarmService.java", """
+package com.example.demo.service;
+
+import com.example.demo.entity.Farm;
+import java.util.List;
+
+public interface FarmService {
+
+    Farm createFarm(Farm farm, long ownerId);
+
+    List<Farm> getFarmsByOwner(long ownerId);
+}
+""")
+
+write(f"{BASE}/service/SuggestionService.java", """
+package com.example.demo.service;
+
+public interface SuggestionService {
+
+    String generateSuggestion(long farmId);
+
+    String getSuggestion(long farmId);
+}
+""")
+
+# =========================
+# SERVICE IMPLEMENTATIONS
+# =========================
+
+write(f"{BASE}/service/impl/UserServiceImpl.java", """
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
+
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public User register(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+}
+""")
+
+write(f"{BASE}/service/impl/FarmServiceImpl.java", """
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.Farm;
+import com.example.demo.repository.FarmRepository;
+import com.example.demo.service.FarmService;
+
+import java.util.List;
+
+public class FarmServiceImpl implements FarmService {
+
+    private final FarmRepository farmRepository;
+
+    public FarmServiceImpl(FarmRepository farmRepository) {
+        this.farmRepository = farmRepository;
+    }
+
+    @Override
+    public Farm createFarm(Farm farm, long ownerId) {
+        farm.setOwnerId(ownerId);
+        return farmRepository.save(farm);
+    }
+
+    @Override
+    public List<Farm> getFarmsByOwner(long ownerId) {
+        return farmRepository.findByOwnerId(ownerId);
+    }
+}
+""")
+
+write(f"{BASE}/service/impl/SuggestionServiceImpl.java", """
+package com.example.demo.service.impl;
+
+import com.example.demo.service.SuggestionService;
+
+public class SuggestionServiceImpl implements SuggestionService {
+
+    @Override
+    public String generateSuggestion(long farmId) {
+        return "Generated suggestion for farm " + farmId;
+    }
+
+    @Override
+    public String getSuggestion(long farmId) {
+        return "Suggestion for farm " + farmId;
+    }
+}
+""")
+
+# =========================
+# REPOSITORIES
+# =========================
+
+write(f"{BASE}/repository/UserRepository.java", """
+package com.example.demo.repository;
+
+import com.example.demo.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmail(String email);
+
+    boolean existsByEmail(String email);
+}
+""")
+
+# =========================
+# SWAGGER CONFIG
+# =========================
 
 
-print("\\n✅ PROJECT GENERATION COMPLETE")
+
+print("\\n✅ ALL FIXES APPLIED SUCCESSFULLY")

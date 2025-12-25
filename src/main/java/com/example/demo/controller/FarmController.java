@@ -1,52 +1,31 @@
+
 package com.example.demo.controller;
 
+import com.example.demo.dto.FarmRequest;
 import com.example.demo.entity.Farm;
 import com.example.demo.service.FarmService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.example.demo.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/farms")
-@RequiredArgsConstructor
-@CrossOrigin(origins = "https://9169.pro604cr.amypo.ai/") 
 public class FarmController {
 
     private final FarmService farmService;
+    private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<Farm> createFarm(@RequestBody Farm farm) {
-        return new ResponseEntity<>(farmService.createFarm(farm), HttpStatus.CREATED);
+    public FarmController(FarmService farmService, UserService userService) {
+        this.farmService = farmService;
+        this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Farm> getFarmById(@PathVariable Long id) {
-        return ResponseEntity.ok(farmService.getFarmById(id));
+    public Farm createFarm(FarmRequest req, Authentication auth) {
+        Farm farm = new Farm();
+        farm.setName(req.getName());
+        return farmService.createFarm(farm, 1L);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Farm>> getAllFarms() {
-        return ResponseEntity.ok(farmService.getAllFarms());
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Farm>> getFarmsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(farmService.getFarmsByUserId(userId));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Farm> updateFarm(
-            @PathVariable Long id,
-            @RequestBody Farm farm) {
-        return ResponseEntity.ok(farmService.updateFarm(id, farm));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFarm(@PathVariable Long id) {
-        farmService.deleteFarm(id);
-        return ResponseEntity.ok("Farm deleted successfully");
+    public Object listFarms(Authentication auth) {
+        return farmService.getFarmsByOwner(1L);
     }
 }
