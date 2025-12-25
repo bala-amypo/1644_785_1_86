@@ -37,6 +37,11 @@ public class FarmServiceImpl implements FarmService {
     }
 
     @Override
+    public List<Farm> findByUserId(Long userId) {
+        return farmRepository.findByUserId(userId);
+    }
+
+    @Override
     public Farm updateFarm(Long id, Farm farm) {
         Farm existingFarm = getFarmById(id);
 

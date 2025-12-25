@@ -1,4 +1,7 @@
 package com.example.demo.repository; 
 import org.springframework.data.jpa.repository.JpaRepository;
  import com.example.demo.entity.Farm; 
- public interface FarmRepository extends JpaRepository<Farm,Long>{}
+ import java.util.*;
+ public interface FarmRepository extends JpaRepository<Farm,Long>{
+    List<Farm> findByUserId(Long userId);
+ }
