@@ -1,74 +1,21 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Table(name = "farms")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Farm {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
-
-    private String farmName;
-
-    private String location;
-
-    private Double soilPh;
-
+    private String name;
+    private double soilPH;
+    private double waterLevel;
     private String season;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFarmName() {
-        return farmName;
-    }
-
-    public void setFarmName(String farmName) {
-        this.farmName = farmName;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Double getSoilPh() {
-        return soilPh;
-    }
-
-    public void setSoilPh(Double soilPh) {
-        this.soilPh = soilPh;
-    }
-
-    public String getSeason() {
-        return season;
-    }
-
-    public void setSeason(String season) {
-        this.season = season;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @ManyToOne
+    private User owner;
 }

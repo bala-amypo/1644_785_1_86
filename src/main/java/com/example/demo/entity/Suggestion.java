@@ -2,27 +2,25 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "suggestions")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Suggestion {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
+    private String suggestedCrops;
+    private String suggestedFertilizers;
+    private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private String soilType;
+    @ManyToOne
+    private Farm farm;
 
-    @Column(nullable = false)
-    private String cropName;
-
-    @Column(nullable = false)
-    private String fertilizerName;
-
-    private String description;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

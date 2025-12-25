@@ -4,19 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "fertilizers")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Fertilizer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
-
     private String name;
-    private String type;        
-    private String nutrient;    
-    private String description;
+    private String npkRatio;
+    private String recommendedForCrops;
 }

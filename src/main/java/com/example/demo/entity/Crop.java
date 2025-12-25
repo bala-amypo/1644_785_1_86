@@ -4,21 +4,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "crops")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Crop {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
-
-    @Column(nullable = false)
-    private String cropName;
-
+    private String name;
+    private double suitablePHMin;
+    private double suitablePHMax;
+    private double requiredWater;
     private String season;
-
-    private String soilType;
 }
