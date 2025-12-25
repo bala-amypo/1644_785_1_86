@@ -21,6 +21,7 @@ public class Farm {
     private String season;
     private String Location;
     public double getSoilPh(){return this.soilPh;}
+    public void setSoilPh(double ph){this.soilPh=ph;}
 
     @ManyToOne
     private User user;
