@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CropRepository extends JpaRepository<Crop, Long> {
+    List<Crop> findSuitableCrops(double soilPh, String season);
+
+List<Crop> findSuitableCropsAdvanced(double soilPh, double waterLevel, String season);
+
 }

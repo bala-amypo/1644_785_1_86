@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FertilizerRepository extends JpaRepository<Fertilizer, Long> {
+    List<Fertilizer> findByCropName(String cropName);
+
+List<Fertilizer> findByCropNames(List<String> cropNames);
+
 }
