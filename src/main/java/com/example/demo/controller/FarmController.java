@@ -21,7 +21,7 @@ public class FarmController {
 
     public Farm createFarm(FarmRequest req, Authentication auth) {
         Farm farm = new Farm();
-        farm.setName(req.getName());
+        farm.setFarmName(req.getName());
         return farmService.createFarm(farm, 1L);
     }
 

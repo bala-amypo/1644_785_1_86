@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  import java.util.*;
  public interface FarmRepository extends JpaRepository<Farm,Long>{
     List<Farm> findByUserId(Long userId);
+    List<Farm> findByOwnerId(long ownerId);
  }
