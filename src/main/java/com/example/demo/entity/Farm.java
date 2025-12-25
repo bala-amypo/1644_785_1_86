@@ -15,9 +15,12 @@ public class Farm {
     private Long id;
     private String name;
     private double soilPH;
+    private double soilPh;
     private double waterLevel;
     private String season;
+    private String Location;
+
 
     @ManyToOne
-    private User owner;
+    private User user;
 }
