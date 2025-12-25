@@ -1,111 +1,62 @@
 import os
+import re
 
-BASE = "src/main/java/com/example/demo"
+# Path to your Java project
+PROJECT_DIR = '/home/coder/Workspace/demo/src/main/java/com/example/demo'
 
-def write(path, content):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w") as f:
-        f.write(content)
-    print(f"✔ {path}")
+# Step 1: Find duplicate class definitions
+def find_duplicate_classes():
+    class_map = {}
+    for root, dirs, files in os.walk(PROJECT_DIR):
+        for file in files:
+            if file.endswith('.java'):
+                path = os.path.join(root, file)
+                with open(path, 'r') as f:
+                    content = f.read()
+                    match = re.search(r'public\s+class\s+(\w+)', content)
+                    if match:
+                        class_name = match.group(1)
+                        if class_name in class_map:
+                            print(f'Duplicate class found: {class_name} in {path} and {class_map[class_name]}')
+                        else:
+                            class_map[class_name] = path
 
-# ======================================================
-# ENTITIES (ADD BUILDER + GETTERS)
-# ======================================================
-entities = {
-    "User": ["id","email","password"],
-    "Farm": ["id","farmName","ownerId"],
-    "Crop": ["id","name"],
-    "Fertilizer": ["id","name","recommendedForCrops"],
-    "Suggestion": ["id","text"]
-}
+# Step 2: Automatically generate missing getters/setters for entities
+def generate_getters_setters():
+    for root, dirs, files in os.walk(PROJECT_DIR):
+        for file in files:
+            if file.endswith('.java'):
+                path = os.path.join(root, file)
+                with open(path, 'r') as f:
+                    lines = f.readlines()
+                updated_lines = []
+                fields = []
+                in_class = False
+                class_name = ''
+                for line in lines:
+                    updated_lines.append(line)
+                    class_match = re.search(r'public\s+class\s+(\w+)', line)
+                    if class_match:
+                        in_class = True
+                        class_name = class_match.group(1)
+                    if in_class:
+                        field_match = re.search(r'private\s+(\w+)\s+(\w+);', line)
+                        if field_match:
+                            f_type, f_name = field_match.groups()
+                            fields.append((f_type, f_name))
+                # Add getters/setters at the end of class
+                for f_type, f_name in fields:
+                    getter = f'    public {f_type} get{f_name.capitalize()}() {{ return {f_name}; }}\n'
+                    setter = f'    public void set{f_name.capitalize()}({f_type} {f_name}) {{ this.{f_name} = {f_name}; }}\n'
+                    updated_lines.append(getter)
+                    updated_lines.append(setter)
+                # Write back
+                with open(path, 'w') as f:
+                    f.writelines(updated_lines)
 
-for e, fields in entities.items():
-    write(f"{BASE}/entity/{e}.java", f"""
-package com.example.demo.entity;
-
-import lombok.*;
-import jakarta.persistence.*;
-import java.util.*;
-
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class {e} {{
-    @Id
-    @GeneratedValue
-    private Long id;
-""" + "\n".join([f"    private String {f};" for f in fields if f!="id"]) + "\n}")
-# ======================================================
-# DTOs (ALL ARGS CONSTRUCTORS)
-# ======================================================
-write(f"{BASE}/dto/FarmRequest.java", """
-package com.example.demo.dto;
-import lombok.*;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class FarmRequest {
-    private String name;
-    private double lat;
-    private double lon;
-    private String soil;
-}
-""")
-
-# ======================================================
-# SERVICES + IMPLS
-# ======================================================
-services = ["User","Farm","Catalog","Suggestion"]
-
-for s in services:
-    write(f"{BASE}/service/{s}Service.java", f"""
-package com.example.demo.service;
-public interface {s}Service {{}}
-""")
-    write(f"{BASE}/service/impl/{s}ServiceImpl.java", f"""
-package com.example.demo.service.impl;
-
-import com.example.demo.service.{s}Service;
-
-public class {s}ServiceImpl implements {s}Service {{
-}}
-""")
-
-# ======================================================
-# CONTROLLERS (MATCH TEST SIGNATURES)
-# ======================================================
-write(f"{BASE}/controller/AuthController.java", """
-package com.example.demo.controller;
-
-import com.example.demo.service.UserService;
-import com.example.demo.security.JwtTokenProvider;
-
-public class AuthController {
-
-    public AuthController(UserService us, JwtTokenProvider jwt) {}
-
-    public Object register(Object req) { return null; }
-    public Object login(Object req) { return null; }
-}
-""")
-
-write(f"{BASE}/controller/CatalogController.java", """
-package com.example.demo.controller;
-
-import com.example.demo.service.CatalogService;
-
-public class CatalogController {
-
-    public CatalogController(CatalogService cs) {}
-
-    public Object addCrop(Object r, Object a) { return null; }
-    public Object addFertilizer(Object r, Object a) { return null; }
-    public Object findCrops(double a,double b,String c) { return null; }
-    public Object findFerts(String s) { return null; }
-}
-""")
-
-print("\\n✅ Test contract aligned. Re-run mvn test.")
+if __name__ == '__main__':
+    print('Scanning for duplicate classes...')
+    find_duplicate_classes()
+    print('Generating getters and setters for entities...')
+    generate_getters_setters()
+    print('Done.')
