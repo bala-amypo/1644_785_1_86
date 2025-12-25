@@ -13,6 +13,7 @@ public interface FarmService {
     List<Farm> getAllFarms();
 
     List<Farm> getFarmsByUserId(Long userId);
+    List<Farm> findByUserId(Long userId);
 
     Farm updateFarm(Long id, Farm farm);
 

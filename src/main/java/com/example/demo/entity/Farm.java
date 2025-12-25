@@ -14,6 +14,7 @@ public class Farm {
     @Id @GeneratedValue
     private Long id;
     private String name;
+    private String farmName;
     private double soilPH;
     private double soilPh;
     private double waterLevel;
