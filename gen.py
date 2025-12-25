@@ -1,247 +1,204 @@
 import os
 from pathlib import Path
 
-BASE = Path("src/main/java/com/example/demo")
+BASE_DIR = Path("src/main/java/com/example/demo/dto")
 
-files = {
-    "DemoApplication.java": """package com.example.demo;
+dtos = {
+    "AuthRequest.java": """package com.example.demo.dto;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+public class AuthRequest {
 
-@SpringBootApplication
-public class DemoApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+    private String email;
+    private String password;
+
+    public AuthRequest() {}
+
+    public AuthRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
 """,
 
-    "entity/User.java": """package com.example.demo.entity;
+    "AuthResponse.java": """package com.example.demo.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+public class AuthResponse {
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
-    @Id @GeneratedValue
-    private Long id;
-    private String name;
-    @Column(unique = true)
-    private String email;
-    private String password;
-    private String role;
+    private String token;
+
+    public AuthResponse() {}
+
+    public AuthResponse(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
 }
 """,
 
-    "entity/Farm.java": """package com.example.demo.entity;
+    "RegisterRequest.java": """package com.example.demo.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+public class RegisterRequest {
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Farm {
-    @Id @GeneratedValue
-    private Long id;
+    private String name;
+    private String email;
+    private String password;
+
+    public RegisterRequest() {}
+
+    public RegisterRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+""",
+
+    "FarmRequest.java": """package com.example.demo.dto;
+
+public class FarmRequest {
+
     private String name;
     private double soilPH;
     private double waterLevel;
     private String season;
 
-    @ManyToOne
-    private User owner;
+    public FarmRequest() {}
+
+    public FarmRequest(String name, double soilPH, double waterLevel, String season) {
+        this.name = name;
+        this.soilPH = soilPH;
+        this.waterLevel = waterLevel;
+        this.season = season;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getSoilPH() {
+        return soilPH;
+    }
+
+    public double getWaterLevel() {
+        return waterLevel;
+    }
+
+    public String getSeason() {
+        return season;
+    }
 }
 """,
 
-    "entity/Crop.java": """package com.example.demo.entity;
+    "CropRequest.java": """package com.example.demo.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+public class CropRequest {
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Crop {
-    @Id @GeneratedValue
-    private Long id;
     private String name;
     private double suitablePHMin;
     private double suitablePHMax;
     private double requiredWater;
     private String season;
+
+    public CropRequest() {}
+
+    public CropRequest(String name,
+                       double suitablePHMin,
+                       double suitablePHMax,
+                       double requiredWater,
+                       String season) {
+        this.name = name;
+        this.suitablePHMin = suitablePHMin;
+        this.suitablePHMax = suitablePHMax;
+        this.requiredWater = requiredWater;
+        this.season = season;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getSuitablePHMin() {
+        return suitablePHMin;
+    }
+
+    public double getSuitablePHMax() {
+        return suitablePHMax;
+    }
+
+    public double getRequiredWater() {
+        return requiredWater;
+    }
+
+    public String getSeason() {
+        return season;
+    }
 }
 """,
 
-    "entity/Fertilizer.java": """package com.example.demo.entity;
+    "FertilizerRequest.java": """package com.example.demo.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
+public class FertilizerRequest {
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Fertilizer {
-    @Id @GeneratedValue
-    private Long id;
     private String name;
     private String npkRatio;
     private String recommendedForCrops;
-}
-""",
 
-    "entity/Suggestion.java": """package com.example.demo.entity;
+    public FertilizerRequest() {}
 
-import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDateTime;
-
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Suggestion {
-    @Id @GeneratedValue
-    private Long id;
-    private String suggestedCrops;
-    private String suggestedFertilizers;
-    private LocalDateTime createdAt;
-
-    @ManyToOne
-    private Farm farm;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-}
-""",
-
-    "util/ValidationUtil.java": """package com.example.demo.util;
-
-public class ValidationUtil {
-    public static boolean validSeason(String s) {
-        return s != null && (s.equals("Kharif") || s.equals("Rabi") || s.equals("Zaid"));
-    }
-}
-""",
-
-    "exception/BadRequestException.java": """package com.example.demo.exception;
-
-public class BadRequestException extends RuntimeException {
-    public BadRequestException(String msg) {
-        super(msg);
-    }
-}
-""",
-
-    "exception/ResourceNotFoundException.java": """package com.example.demo.exception;
-
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String msg) {
-        super(msg);
-    }
-}
-""",
-
-    "exception/GlobalExceptionHandler.java": """package com.example.demo.exception;
-
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(404).body(ex.getMessage());
-    }
-}
-""",
-
-    "security/JwtTokenProvider.java": """package com.example.demo.security;
-
-import io.jsonwebtoken.*;
-
-public class JwtTokenProvider {
-
-    private final String secret = "secret";
-
-    public String createToken(Long id, String email, String role) {
-        return Jwts.builder()
-                .claim("id", id)
-                .claim("email", email)
-                .claim("role", role)
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+    public FertilizerRequest(String name, String npkRatio, String recommendedForCrops) {
+        this.name = name;
+        this.npkRatio = npkRatio;
+        this.recommendedForCrops = recommendedForCrops;
     }
 
-    public boolean validateToken(String token) {
-        Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-        return true;
+    public String getName() {
+        return name;
     }
 
-    public String getEmail(String token) {
-        return Jwts.parser().setSigningKey(secret)
-                .parseClaimsJws(token).getBody().get("email", String.class);
+    public String getNpkRatio() {
+        return npkRatio;
     }
 
-    public Long getUserId(String token) {
-        return Jwts.parser().setSigningKey(secret)
-                .parseClaimsJws(token).getBody().get("id", Long.class);
-    }
-
-    public String getRole(String token) {
-        return Jwts.parser().setSigningKey(secret)
-                .parseClaimsJws(token).getBody().get("role", String.class);
-    }
-}
-""",
-
-    "security/JwtAuthenticationFilter.java": """package com.example.demo.security;
-
-public class JwtAuthenticationFilter {
-    public JwtAuthenticationFilter(JwtTokenProvider provider) {}
-}
-""",
-
-    "config/SwaggerConfig.java": """package com.example.demo.config;
-
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.spi.DocumentationType;
-import org.springframework.context.annotation.Bean;
-
-public class SwaggerConfig {
-
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2);
+    public String getRecommendedForCrops() {
+        return recommendedForCrops;
     }
 }
 """
 }
 
 def main():
-    for rel_path, content in files.items():
-        file_path = BASE / rel_path
-        os.makedirs(file_path.parent, exist_ok=True)
+    os.makedirs(BASE_DIR, exist_ok=True)
+
+    for filename, content in dtos.items():
+        file_path = BASE_DIR / filename
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
         print(f"Created: {file_path}")
 
-    print("\n✅ Project structure and files generated successfully.")
+    print("\n✅ All DTO files generated successfully.")
 
 if __name__ == "__main__":
     main()
