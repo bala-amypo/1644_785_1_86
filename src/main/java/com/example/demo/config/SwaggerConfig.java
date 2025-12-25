@@ -1,13 +1,21 @@
-// package com.example.demo.config;
+package com.example.demo.config;
 
-// import springfox.documentation.spring.web.plugins.Docket;
-// import springfox.documentation.spi.DocumentationType;
-// import org.springframework.context.annotation.Bean;
+import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.OpenAPI;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-// public class SwaggerConfig {
+import java.util.List;
 
-//     @Bean
-//     public Docket api() {
-//         return new Docket(DocumentationType.SWAGGER_2);
-//     }
-// }
+@Configuration
+public class SwaggerConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .servers(List.of(
+                        new Server()
+                                .url("https://9169.pro604cr.amypo.ai")
+                ));
+    }
+}
