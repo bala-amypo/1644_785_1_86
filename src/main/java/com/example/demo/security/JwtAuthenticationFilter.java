@@ -1,5 +1,5 @@
-package com.example.demo.security;
 
+package com.example.demo.security;
 public class JwtAuthenticationFilter {
-    public JwtAuthenticationFilter(JwtTokenProvider provider) {}
+    public JwtAuthenticationFilter(JwtTokenProvider p){}
 }
