@@ -20,7 +20,7 @@ public class Farm {
     private double waterLevel;
     private String season;
     private String Location;
-
+    public double getSoilPh(){return this.soilPh;}
 
     @ManyToOne
     private User user;
