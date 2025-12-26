@@ -1,1 +1,4 @@
-package com.example.demo.dto; public class FertilizerRequest(String name,String npkRatio,String recommendedForCrops){}
+package com.example.demo.dto;
+import lombok.*;
+@Data @AllArgsConstructor @NoArgsConstructor
+public class FertilizerRequest { private String name, npkRatio, recommendedForCrops; }

@@ -1,2 +1,4 @@
 package com.example.demo.dto;
- public class CropRequest(String name,double suitablePHMin,double suitablePHMax,double requiredWater,String season){}
+import lombok.*;
+@Data @AllArgsConstructor @NoArgsConstructor
+public class CropRequest { private String name; private Double suitablePHMin, suitablePHMax, requiredWater; private String season; }
