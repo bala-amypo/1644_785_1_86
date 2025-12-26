@@ -6,7 +6,8 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    private String secret = "mySecretKey123mySecretKey123mySecretKey123";
+    // Length must be at least 32 characters
+    private String secret = "ThisIsAVeryLongSecretKeyUsedForJWTTokenGenerationToPassThe256BitRequirement1234567890";
 
     public String createToken(Long userId, String email, String role) {
         Claims claims = Jwts.claims().setSubject(email);
@@ -34,8 +35,8 @@ public class JwtTokenProvider {
     }
 
     public Long getUserId(String token) {
-        Object userId = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("userId");
-        return Long.valueOf(userId.toString());
+        Object uid = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("userId");
+        return Long.valueOf(uid.toString());
     }
 
     public String getRole(String token) {
