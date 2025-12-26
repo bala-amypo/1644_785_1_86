@@ -22,21 +22,23 @@ public class SuggestionServiceImpl implements SuggestionService {
     public Suggestion generateSuggestion(Long farmId) {
         Farm farm = farmService.getFarmById(farmId);
         
-        // Find crops based on farm data
+        // 1. Find Suitable Crops
         List<Crop> crops = catalogService.findSuitableCrops(farm.getSoilPH(), farm.getWaterLevel(), farm.getSeason());
-        
-        // Extract names
         List<String> cropNames = crops.stream().map(Crop::getName).collect(Collectors.toList());
         
-        // Find fertilizers for those crops
+        // 2. Find Fertilizers based on those Crop names
         List<Fertilizer> ferts = catalogService.findFertilizersForCrops(cropNames);
         List<String> fertNames = ferts.stream().map(Fertilizer::getName).collect(Collectors.toList());
 
-        // Create and Save
+        // 3. Join names into comma-separated strings
+        String suggestedCrops = String.join(",", cropNames);
+        String suggestedFertilizers = String.join(",", fertNames);
+
+        // 4. Build Suggestion manually (No Lombok)
         Suggestion s = Suggestion.builder()
                 .farm(farm)
-                .suggestedCrops(String.join(",", cropNames)) // Ensure this isn't empty if crops exist
-                .suggestedFertilizers(String.join(",", fertNames))
+                .suggestedCrops(suggestedCrops)
+                .suggestedFertilizers(suggestedFertilizers)
                 .build();
                 
         return repo.save(s);
@@ -44,7 +46,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public Suggestion getSuggestion(Long id) {
-        return repo.findById(id).orElseThrow(() -> new com.example.demo.exception.ResourceNotFoundException("Suggestion not found"));
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
     }
 
     @Override
