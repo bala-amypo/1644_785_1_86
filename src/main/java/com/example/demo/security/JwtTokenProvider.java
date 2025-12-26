@@ -6,8 +6,8 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    // Length must be at least 32 characters
-    private String secret = "ThisIsAVeryLongSecretKeyUsedForJWTTokenGenerationToPassThe256BitRequirement1234567890";
+    // This key is exactly 32+ characters to pass the security requirement
+    private String secret = "ThisIsASecretKeyWithMoreThan32CharactersForSecurityCompliance123!";
 
     public String createToken(Long userId, String email, String role) {
         Claims claims = Jwts.claims().setSubject(email);
