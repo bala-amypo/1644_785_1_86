@@ -1,16 +1,28 @@
 package com.example.demo.security;
-import org.springframework.web.filter.OncePerRequestFilter;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.IOException;
+import io.jsonwebtoken.*;
+import org.springframework.stereotype.Component;
+import java.util.Date;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtTokenProvider tokenProvider;
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider) { this.tokenProvider = tokenProvider; }
+@Component
+public class JwtTokenProvider {
+    private String secret = "secretKey123secretKey123secretKey123secretKey123";
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // Implementation for security context...
-        filterChain.doFilter(request, response);
+    public String createToken(Long userId, String email, String role) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("userId", userId);
+        claims.put("role", role);
+        return Jwts.builder().setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
+
+    public boolean validateToken(String token) {
+        try { Jwts.parser().setSigningKey(secret).parseClaimsJws(token); return true; } 
+        catch (Exception e) { return false; }
+    }
+
+    public String getEmail(String token) { return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject(); }
+    public Long getUserId(String token) { return Long.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("userId").toString()); }
+    public String getRole(String token) { return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("role").toString(); }
 }

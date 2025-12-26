@@ -1,18 +1,21 @@
-
 package com.example.demo.service.impl;
 import com.example.demo.entity.*;
 import com.example.demo.exception.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.FarmService;
 import com.example.demo.util.ValidationUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service @RequiredArgsConstructor
+@Service
 public class FarmServiceImpl implements FarmService {
     private final FarmRepository farmRepo;
     private final UserRepository userRepo;
+
+    public FarmServiceImpl(FarmRepository farmRepo, UserRepository userRepo) {
+        this.farmRepo = farmRepo;
+        this.userRepo = userRepo;
+    }
 
     public Farm createFarm(Farm farm, Long ownerId) {
         User owner = userRepo.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -21,6 +24,12 @@ public class FarmServiceImpl implements FarmService {
         farm.setOwner(owner);
         return farmRepo.save(farm);
     }
-    public List<Farm> getFarmsByOwner(Long id) { return farmRepo.findByOwnerId(id); }
-    public Farm getFarmById(Long id) { return farmRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Farm not found")); }
+
+    public List<Farm> getFarmsByOwner(Long ownerId) {
+        return farmRepo.findByOwnerId(ownerId);
+    }
+
+    public Farm getFarmById(Long farmId) {
+        return farmRepo.findById(farmId).orElseThrow(() -> new ResourceNotFoundException("Farm not found"));
+    }
 }
