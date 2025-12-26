@@ -1,3 +1,5 @@
 
-package com.example.demo.service;
-public interface SuggestionService {}
+public interface SuggestionService {
+    Suggestion generateSuggestion(Long farmId);
+    Suggestion getSuggestion(Long suggestionId);
+}
