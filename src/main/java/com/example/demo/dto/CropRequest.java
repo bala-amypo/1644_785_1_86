@@ -1,1 +1,2 @@
-package com.example.demo.dto; public class CropRequest(String name,double suitablePHMin,double suitablePHMax,double requiredWater,String season){}
+package com.example.demo.dto;
+ public class CropRequest(String name,double suitablePHMin,double suitablePHMax,double requiredWater,String season){}

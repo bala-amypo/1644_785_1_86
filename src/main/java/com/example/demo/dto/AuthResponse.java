@@ -1,1 +1,2 @@
-package com.example.demo.dto; public class AuthResponse(String token){}
+package com.example.demo.dto; 
+public class AuthResponse(String token){}
