@@ -1,3 +1,6 @@
 
-package com.example.demo.service;
-public interface UserService {}
+public interface UserService {
+    User register(User user);
+    User findByEmail(String email);
+    User findById(Long id);
+}
