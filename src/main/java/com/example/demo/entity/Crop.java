@@ -16,11 +16,9 @@ public class Crop {
         this.id = id; this.name = name; this.suitablePHMin = suitablePHMin; this.suitablePHMax = suitablePHMax; this.requiredWater = requiredWater; this.season = season;
     }
 
-    public Long getId() { return id; }
     public String getName() { return name; }
     public Double getSuitablePHMin() { return suitablePHMin; }
     public Double getSuitablePHMax() { return suitablePHMax; }
-    public Double getRequiredWater() { return requiredWater; }
     public String getSeason() { return season; }
 
     public static CropBuilder builder() { return new CropBuilder(); }

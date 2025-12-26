@@ -1,11 +1,7 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.Crop;
-import com.example.demo.entity.Fertilizer;
+package com.example.demo.service;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.exception.BadRequestException;
-import com.example.demo.repository.CropRepository;
-import com.example.demo.repository.FertilizerRepository;
-import com.example.demo.service.CatalogService;
 import com.example.demo.util.ValidationUtil;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -33,12 +29,15 @@ public class CatalogServiceImpl implements CatalogService {
         return fertRepo.save(fertilizer);
     }
 
-    @Override public List<Crop> findSuitableCrops(Double ph, Double water, String season) { return cropRepo.findSuitableCrops(ph, water, season); }
+    @Override
+    public List<Crop> findSuitableCrops(Double ph, Double water, String season) {
+        return cropRepo.findSuitableCrops(ph, season);
+    }
 
     @Override
     public List<Fertilizer> findFertilizersForCrops(List<String> cropNames) {
         Set<Fertilizer> ferts = new HashSet<>();
-        for (String name : cropNames) { ferts.addAll(fertRepo.findByCropName(name)); }
+        for (String name : cropNames) ferts.addAll(fertRepo.findByCropName(name));
         return new ArrayList<>(ferts);
     }
 }
