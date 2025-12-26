@@ -1,7 +1,10 @@
 package com.example.demo.service;
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+
+import com.example.demo.entity.Crop;
+import com.example.demo.entity.Fertilizer;
 import com.example.demo.exception.BadRequestException;
+import com.example.demo.repository.CropRepository;
+import com.example.demo.repository.FertilizerRepository;
 import com.example.demo.util.ValidationUtil;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -31,13 +34,16 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public List<Crop> findSuitableCrops(Double ph, Double water, String season) {
+        // The test case t39 and t60 call with 3 params, but repo uses 2 (ph, season)
         return cropRepo.findSuitableCrops(ph, season);
     }
 
     @Override
     public List<Fertilizer> findFertilizersForCrops(List<String> cropNames) {
-        Set<Fertilizer> ferts = new HashSet<>();
-        for (String name : cropNames) ferts.addAll(fertRepo.findByCropName(name));
-        return new ArrayList<>(ferts);
+        Set<Fertilizer> result = new HashSet<>();
+        for (String name : cropNames) {
+            result.addAll(fertRepo.findByCropName(name));
+        }
+        return new ArrayList<>(result);
     }
 }
