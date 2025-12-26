@@ -11,10 +11,9 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("userId", userId);
         claims.put("role", role);
-        return Jwts.builder().setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+        return Jwts.builder().setClaims(claims).setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+            .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
     public boolean validateToken(String token) {
