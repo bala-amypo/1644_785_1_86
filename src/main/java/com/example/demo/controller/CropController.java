@@ -1,38 +1,28 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Crop;
-import com.example.demo.service.CropService;
-import lombok.RequiredArgsConstructor;
+import com.example.demo.service.CatalogService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/crops")
-@RequiredArgsConstructor
-@CrossOrigin(origins = "https://9169.pro604cr.amypo.ai/") 
+@RequestMapping("/catalog/crops")
 public class CropController {
 
-    private final CropService cropService;
+    private final CatalogService catalogService;
 
-    @PostMapping
-    public Crop createCrop(@RequestBody Crop crop) {
-        return cropService.saveCrop(crop);
+    // REMOVED @RequiredArgsConstructor
+    // ADDED Manual Constructor for Dependency Injection
+    public CropController(CatalogService catalogService) {
+        this.catalogService = catalogService;
     }
 
-    @GetMapping
-    public List<Crop> getAllCrops() {
-        return cropService.getAllCrops();
-    }
-
-    @GetMapping("/{id}")
-    public Crop getCropById(@PathVariable Long id) {
-        return cropService.getCropById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public String deleteCrop(@PathVariable Long id) {
-        cropService.deleteCrop(id);
-        return "Crop deleted successfully";
+    @GetMapping("/suitable")
+    public ResponseEntity<List<Crop>> findCrops(
+            @RequestParam Double ph, 
+            @RequestParam Double water, 
+            @RequestParam String season) {
+        return ResponseEntity.ok(catalogService.findSuitableCrops(ph, water, season));
     }
 }
