@@ -1,5 +1,4 @@
-
-   package com.example.demo.entity;
+package com.example.demo.entity;
 import lombok.*;
 import javax.persistence.*;
 
@@ -8,10 +7,10 @@ import javax.persistence.*;
 public class Farm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne @JoinColumn(name = "user_id")
+    private User owner;
     private String name;
     private Double soilPH;
     private Double waterLevel;
     private String season;
-    @ManyToOne @JoinColumn(name = "user_id")
-    private User owner;
 }
