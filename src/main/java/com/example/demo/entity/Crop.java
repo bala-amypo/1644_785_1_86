@@ -1,9 +1,12 @@
 package com.example.demo.entity;
-import javax.persistence.*;
 
-@Entity @Table(name = "crops")
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "crops")
 public class Crop {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Double suitablePHMin;
@@ -13,9 +16,11 @@ public class Crop {
 
     public Crop() {}
     public Crop(Long id, String name, Double suitablePHMin, Double suitablePHMax, Double requiredWater, String season) {
-        this.id = id; this.name = name; this.suitablePHMin = suitablePHMin; this.suitablePHMax = suitablePHMax; this.requiredWater = requiredWater; this.season = season;
+        this.id = id; this.name = name; this.suitablePHMin = suitablePHMin; 
+        this.suitablePHMax = suitablePHMax; this.requiredWater = requiredWater; this.season = season;
     }
 
+    public Long getId() { return id; }
     public String getName() { return name; }
     public Double getSuitablePHMin() { return suitablePHMin; }
     public Double getSuitablePHMax() { return suitablePHMax; }
