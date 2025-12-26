@@ -1,4 +1,8 @@
-package com.example.demo.dto;
-import lombok.*;
-@Data @AllArgsConstructor @NoArgsConstructor
-public class FarmRequest { private String name; private Double soilPH, waterLevel; private String season; }
+package com.example.demo.repository;
+import com.example.demo.entity.Farm;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface FarmRepository extends JpaRepository<Farm, Long> {
+    List<Farm> findByOwnerId(Long ownerId);
+}
