@@ -1,14 +1,13 @@
 package com.example.demo.entity;
-
-import jakarta.persistence.*;
 import lombok.*;
+import javax.persistence.*;
 
-@Entity
-@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
+@Entity @Table(name="fertilizers")
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class Fertilizer {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String npkRatio;
-    private String recommendedForCrops; // CSV
+    private String recommendedForCrops;
 }
