@@ -38,3 +38,4 @@ public class CatalogController {
         return ResponseEntity.ok(catalogService.findFertilizersForCrops(List.of(name)));
     }
 }
+
