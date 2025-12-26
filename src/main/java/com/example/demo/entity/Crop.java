@@ -13,3 +13,4 @@ public class Crop {
     private Double requiredWater;
     private String season;
 }
+
