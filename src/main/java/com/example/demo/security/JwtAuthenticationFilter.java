@@ -1,25 +1,39 @@
-
 package com.example.demo.security;
-import io.jsonwebtoken.*;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import java.util.Date;
+import org.springframework.web.filter.OncePerRequestFilter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
 
 @Component
-public class JwtTokenProvider {
-    private String secret = "secretsecretsecretsecretsecretsecretsecretsecret";
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final JwtTokenProvider tokenProvider;
 
-    public String createToken(Long userId, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put("userId", userId);
-        claims.put("role", role);
-        return Jwts.builder().setClaims(claims).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, secret).compact();
+    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
     }
 
-    public boolean validateToken(String token) {
-        try { Jwts.parser().setSigningKey(secret).parseClaimsJws(token); return true; } catch (Exception e) { return false; }
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            if (tokenProvider.validateToken(token)) {
+                String role = tokenProvider.getRole(token);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        tokenProvider.getUserId(token), null,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }
+        filterChain.doFilter(request, response);
     }
-
-    public String getEmail(String token) { return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject(); }
-    public Long getUserId(String token) { return ((Number) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("userId")).longValue(); }
-    public String getRole(String token) { return (String) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("role"); }
 }

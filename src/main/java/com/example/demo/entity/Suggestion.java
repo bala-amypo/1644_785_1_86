@@ -1,10 +1,13 @@
 package com.example.demo.entity;
-import lombok.*;
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@Entity @Table(name="suggestions")
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
+import lombok.*; // THIS MUST BE PRESENT
+import javax.persistence.*;
+
+@Entity
+@Data // Generates Getters/Setters
+@Builder // Generates Builder
+@NoArgsConstructor // Generates default constructor
+@AllArgsConstructor // Generates all-args constructor
 public class Suggestion {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

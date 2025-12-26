@@ -1,9 +1,13 @@
 package com.example.demo.entity;
-import lombok.*;
+
+import lombok.*; // THIS MUST BE PRESENT
 import javax.persistence.*;
 
-@Entity @Table(name="farms")
-@Data @Builder @NoArgsConstructor @AllArgsConstructor
+@Entity
+@Data // Generates Getters/Setters
+@Builder // Generates Builder
+@NoArgsConstructor // Generates default constructor
+@AllArgsConstructor // Generates all-args constructor
 public class Farm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
