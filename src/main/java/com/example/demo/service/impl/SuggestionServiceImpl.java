@@ -33,6 +33,13 @@ public class SuggestionServiceImpl implements SuggestionService {
         return repo.save(s);
     }
 
-    @Override public Suggestion getSuggestion(Long id) { return repo.findById(id).orElseThrow(() -> new RuntimeException("Not found")); }
-    @Override public List<Suggestion> getSuggestionsByFarm(Long id) { return repo.findByFarmId(id); }
+    @Override
+    public Suggestion getSuggestion(Long id) {
+        return repo.findById(id).orElseThrow(() -> new com.example.demo.exception.ResourceNotFoundException("Not found"));
+    }
+
+    @Override
+    public List<Suggestion> getSuggestionsByFarm(Long id) {
+        return repo.findByFarmId(id);
+    }
 }
