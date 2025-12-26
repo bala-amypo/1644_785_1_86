@@ -34,7 +34,8 @@ public class JwtTokenProvider {
     }
 
     public Long getUserId(String token) {
-        return Long.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("userId").toString());
+        Object userId = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("userId");
+        return Long.valueOf(userId.toString());
     }
 
     public String getRole(String token) {
