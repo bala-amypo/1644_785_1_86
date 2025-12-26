@@ -23,3 +23,4 @@ public class SuggestionServiceImpl implements SuggestionService {
     public Suggestion generateSuggestion(Long farmId) {
         Farm farm = farmService.getFarmById(farmId);
         }
+}
