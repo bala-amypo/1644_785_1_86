@@ -1,5 +1,4 @@
 package com.example.demo.service.impl;
-
 import com.example.demo.entity.*;
 import com.example.demo.repository.SuggestionRepository;
 import com.example.demo.service.*;
@@ -22,5 +21,26 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public Suggestion generateSuggestion(Long farmId) {
         Farm farm = farmService.getFarmById(farmId);
-        }
+        List<Crop> crops = catalogService.findSuitableCrops(farm.getSoilPH(), farm.getWaterLevel(), farm.getSeason());
+        List<String> cropNames = crops.stream().map(Crop::getName).collect(Collectors.toList());
+        
+        List<Fertilizer> ferts = catalogService.findFertilizersForCrops(cropNames);
+        
+        Suggestion s = Suggestion.builder()
+                .farm(farm)
+                .suggestedCrops(String.join(",", cropNames))
+                .suggestedFertilizers(ferts.stream().map(Fertilizer::getName).collect(Collectors.joining(",")))
+                .build();
+        return suggestionRepo.save(s);
+    }
+
+    @Override
+    public Suggestion getSuggestion(Long id) {
+        return suggestionRepo.findById(id).orElseThrow(() -> new com.example.demo.exception.ResourceNotFoundException("Not found"));
+    }
+
+    @Override
+    public List<Suggestion> getSuggestionsByFarm(Long farmId) {
+        return suggestionRepo.findByFarmId(farmId);
+    }
 }
