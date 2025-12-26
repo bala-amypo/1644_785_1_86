@@ -20,4 +20,16 @@ public class SuggestionController {
     public String getSuggestion(long farmId) {
         return suggestionService.getSuggestion(farmId);
     }
+
+
+    @PostMapping("/{farmId}")
+public ResponseEntity<Suggestion> generate(@PathVariable Long farmId) {
+    // Return Suggestion object, NOT String
+    return ResponseEntity.ok(suggestionService.generateSuggestion(farmId));
+}
+
+@GetMapping("/{suggestionId}")
+public ResponseEntity<Suggestion> getSuggestion(@PathVariable Long suggestionId) {
+    return ResponseEntity.ok(suggestionService.getSuggestion(suggestionId));
+}
 }
