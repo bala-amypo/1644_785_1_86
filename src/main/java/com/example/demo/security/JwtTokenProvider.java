@@ -1,38 +1,16 @@
-
 package com.example.demo.security;
+import org.springframework.web.filter.OncePerRequestFilter;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.IOException;
 
-import io.jsonwebtoken.*;
-import java.util.Date;
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final JwtTokenProvider tokenProvider;
+    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider) { this.tokenProvider = tokenProvider; }
 
-public class JwtTokenProvider {
-
-    private final String secret = "secret";
-    private final long validity = 3600000;
-
-    public String createToken(Long id, String email, String role) {
-        return Jwts.builder()
-                .claim("id", id)
-                .claim("email", email)
-                .claim("role", role)
-                .setExpiration(new Date(System.currentTimeMillis()+validity))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-    }
-
-    public boolean validateToken(String token) {
-        Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-        return true;
-    }
-
-    public String getEmail(String token) {
-        return (String) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("email");
-    }
-
-    public Long getUserId(String token) {
-        return ((Number) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("id")).longValue();
-    }
-
-    public String getRole(String token) {
-        return (String) Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("role");
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Implementation for security context...
+        filterChain.doFilter(request, response);
     }
 }
