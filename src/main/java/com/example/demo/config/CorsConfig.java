@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
         registry.addMapping("/**")
                 .allowedOrigins(
-                        "https://9169.pro604cr.amypo.ai/"  
+                        "https://9419.pro604cr.amypo.ai/"  
                 )
                 .allowedMethods("*")
                 .allowedHeaders("*")
