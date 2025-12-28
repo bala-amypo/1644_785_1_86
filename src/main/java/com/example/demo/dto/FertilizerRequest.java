@@ -7,7 +7,7 @@ public class FertilizerRequest {
 
     public FertilizerRequest() {}
 
-    // Constructor that might be used by tests
+  
     public FertilizerRequest(String name, String npkRatio, String recommendedForCrops) {
         this.name = name;
         this.npkRatio = npkRatio;

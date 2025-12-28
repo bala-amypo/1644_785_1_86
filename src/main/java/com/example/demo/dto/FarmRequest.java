@@ -16,7 +16,7 @@ public class FarmRequest {
     public Double getWaterLevel() { return waterLevel; }
     public String getSeason() { return season; }
 
-    // Setters (Required for JSON mapping)
+   
     public void setName(String name) { this.name = name; }
     public void setSoilPH(Double soilPH) { this.soilPH = soilPH; }
     public void setWaterLevel(Double waterLevel) { this.waterLevel = waterLevel; }
